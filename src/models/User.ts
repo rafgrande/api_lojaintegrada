@@ -1,7 +1,7 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
 
-@Entity()
+@Entity("users")
 @ObjectType()
 export class User extends BaseEntity {
   @Field(() => ID)
@@ -16,12 +16,16 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
+  @Field(() => String)
+  @Column()
+  password: string;
+
   @Field(() => Number)
-  @Column({ default: false })
+  @Column({ default: 0 })
   failed_attempts: number;
 
   @Field(() => Date)
-  @Column({ default: false })
+  @Column()
   last_failed_attempts: Date;
 
   @Field(() => Date)
