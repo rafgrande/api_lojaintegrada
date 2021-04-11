@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Arg } from "type-graphql";
+import { hash } from "bcryptjs";
 import { CreateUserInput } from "../inputs/CreateUserInput";
 import { User } from "../models/User"
 
@@ -11,12 +12,18 @@ export class UserResolver {
 
     @Mutation(() => User)
     async createUser(@Arg("data") data: CreateUserInput){
-        const { email } = data;
+        const { name, email, password } = data;
         const userExists = await User.findOne({ where: { email } });
         
         if(userExists) throw new Error("Usuário já foi cadastrado");
 
-        const user = User.create(data);
+        const hashedPassword = await hash(password, 8);
+        
+        const user = User.create({
+            name,
+            email,
+            password: hashedPassword
+        });
         await user.save();
 
         return user;
