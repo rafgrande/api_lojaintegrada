@@ -11,11 +11,15 @@ export class UserResolver {
 
     @Mutation(() => User)
     async createUser(@Arg("data") data: CreateUserInput){
+        const { email } = data;
+        const userExists = await User.findOne({ where: { email } });
+        
+        if(userExists) throw new Error("Usuário já foi cadastrado");
 
         const user = User.create(data);
-        
         await user.save();
 
         return user;
     }
+
 }
