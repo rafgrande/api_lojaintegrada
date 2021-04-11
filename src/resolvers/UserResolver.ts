@@ -4,6 +4,8 @@ import { CreateUserInput } from "../inputs/CreateUserInput";
 import { User } from "../models/User"
 import { CreateSessionInput } from "../inputs/CreateSessionInput";
 
+import CalculateDiffHours from "../utils/CalculateDiffHours"
+
 @Resolver()
 export class UserResolver {
     @Query(() => [User])
@@ -38,7 +40,14 @@ export class UserResolver {
         if(!user) throw new Error("Incorrect email/password combination.");
         const passwordConfirmed = await compare(password, user.password);
         
+        if(user.failed_attempts >= 3 && CalculateDiffHours(user.last_failed_attempts) <= 30) {
+            throw new Error("User temporarily blocked");
+        }
+
         if(!passwordConfirmed) {
+            let errors = user?.failed_attempts || 0;
+            Object.assign(user, {...user, failed_attempts: errors + 1, last_failed_attempts: new Date().toISOString()});
+            await user?.save();
             throw new Error("Incorrect email/password combination.");
         }
             

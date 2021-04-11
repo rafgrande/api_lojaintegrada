@@ -24,8 +24,8 @@ export class User extends BaseEntity {
   @Column({ default: 0 })
   failed_attempts: number;
 
-  @Field(() => Date)
-  @Column()
+  @Field({ nullable: true })
+  @Column({nullable: true})
   last_failed_attempts: Date;
 
   @Field(() => Date)
