@@ -1,7 +1,8 @@
 import { Resolver, Query, Mutation, Arg } from "type-graphql";
-import { hash } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
 import { CreateUserInput } from "../inputs/CreateUserInput";
 import { User } from "../models/User"
+import { CreateSessionInput } from "../inputs/CreateSessionInput";
 
 @Resolver()
 export class UserResolver {
@@ -26,6 +27,21 @@ export class UserResolver {
         });
         await user.save();
 
+        return user;
+    }
+
+    @Mutation(() => User)
+    async createSession(@Arg("data") data: CreateSessionInput){
+        const { email, password } = data;
+        const user = await User.findOne({ where: { email } });
+        
+        if(!user) throw new Error("Incorrect email/password combination.");
+        const passwordConfirmed = await compare(password, user.password);
+        
+        if(!passwordConfirmed) {
+            throw new Error("Incorrect email/password combination.");
+        }
+            
         return user;
     }
 
