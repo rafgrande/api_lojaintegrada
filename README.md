@@ -1,4 +1,4 @@
-## Projeto login | Loja integrada - Front
+## Projeto login | Loja integrada - Back-end
 
 API Graphql desenvolvida utilizando Node, typescript e typeorm.
 
