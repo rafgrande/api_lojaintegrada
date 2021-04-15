@@ -8,7 +8,9 @@ module.exports = {
     "cli": {
         "migrationsDir": "./src/db/migrations"
     },
-    "extra": {
-      ssl: true,
+    extra: {
+      ssl: {
+        rejectUnauthorized: false,
+      }
     }
   }
