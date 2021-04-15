@@ -1,3 +1,5 @@
+import  dotenv from 'dotenv';
+
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server";
@@ -5,6 +7,8 @@ import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql"
 
 import { UserResolver } from "./resolvers/UserResolver"
+
+dotenv.config();
 
 async function main() {
   const connection = await createConnection()

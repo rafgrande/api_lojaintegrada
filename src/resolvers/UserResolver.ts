@@ -23,7 +23,7 @@ export class UserResolver {
         const { name, email, password } = data;
         const userExists = await User.findOne({ where: { email } });
         
-        if(userExists) throw new Error("Usuário já foi cadastrado");
+        if(userExists) throw new Error("User already exists.");
 
         const hashedPassword = await hash(password, 8);
         
@@ -61,7 +61,7 @@ export class UserResolver {
         const {name} = user;
 
         const token = sign({}, 
-            'c9c232f1c99b80a370f220e8042095d5', {
+            process.env.SECRET ?? '', {
             subject: name,
             expiresIn: '1d'
         });
